@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
     std::ios::sync_with_stdio(true);
     auto args = parse_args(argc, argv);
 
-    pcpp::PcapFileReaderDevice reader(args.filename); //"20250929_MBO_072_DRV_InstrumentDefinition.pcap" //SBE
+    pcpp::PcapFileReaderDevice reader(args.filename);
 	if (!reader.open())
 	{
 		std::cerr << "Error opening the pcap file: " << args.filename << "\n";
@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
 
     B3SbePacketPrintProcessor p;
     
-    printf("begin --------\n");
+    std::printf("begin --------\n");
 
     pcpp::RawPacket rawPacket;
 	while (reader.getNextPacket(rawPacket))
@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
 
 	reader.close();
 
-    printf("end --------\n");    
+    std::printf("end --------\n");    
 
     return 0;
 }
