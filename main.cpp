@@ -105,7 +105,6 @@ int main(int argc, char* argv[])
 	{
 		std::cerr << "Error opening the pcap file: " << args.filename << "\n";
         std::exit(EXIT_FAILURE);
-		return 1;
 	}
 
     B3SbePacketPrintProcessor p;
