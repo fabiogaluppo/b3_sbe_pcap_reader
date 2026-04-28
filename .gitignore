@@ -1,0 +1,9 @@
+# VSCode
+.vscode/
+
+# PCAP files
+*.pcap
+
+# Build folders
+build-lin/
+build-win/
