@@ -75,12 +75,13 @@ concept B3SbePacketProcessor =
 namespace detail
 {
     template<B3SbePacketProcessor P>
-    static inline void unsafe_read_b3_sbe_message(const std::uint8_t* payload, std::size_t payload_size, const b3_sbe_packet_header* ph, P&& processor)
+    static inline void unsafe_read_b3_sbe_message(bool can_read, const std::uint8_t* payload, std::size_t payload_size, const b3_sbe_packet_header* ph, P&& processor)
     {
+        if (!can_read)
+            return;
         const b3_sbe_message_header* h = reinterpret_cast<const b3_sbe_message_header*>(payload);
         processor.on_message(*ph, *h, std::span(payload + 12, h->block_length));
-        if (payload_size > h->message_length)
-            unsafe_read_b3_sbe_message(payload + h->message_length, payload_size - h->message_length, ph, processor);
+        unsafe_read_b3_sbe_message(payload_size > h->message_length, payload + h->message_length, payload_size - h->message_length, ph, processor);
     }
 
     template<B3SbePacketProcessor P>
@@ -88,7 +89,7 @@ namespace detail
     {
         const b3_sbe_packet_header* h = reinterpret_cast<const b3_sbe_packet_header*>(payload);
         processor.on_packet_begin(*h);
-        unsafe_read_b3_sbe_message(payload + 16, payload_size - 16, h, processor);
+        unsafe_read_b3_sbe_message(true, payload + 16, payload_size - 16, h, processor);
         processor.on_packet_end(*h);
     }
 }
